@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Kalkulator</string>
+    <string name="simple">Simple</string>
+    <string name="advanced">Advanced</string>
+    <string name="about">About</string>
+    <string name="exit">Exit</string>
+    <string name="calculator">Calculator</string>
+    <string name="but0">0</string>
+    <string name="but_comma">,</string>
+    <string name="but_equals">=</string>
+    <string name="but_plus">+</string>
+    <string name="but1">1</string>
+    <string name="but2">2</string>
+    <string name="but3">3</string>
+    <string name="but_minus">-</string>
+    <string name="but4">4</string>
+    <string name="but5">5</string>
+    <string name="but6">6</string>
+    <string name="but7">7</string>
+    <string name="but8">8</string>
+    <string name="but9">9</string>
+    <string name="but_divide">/</string>
+    <string name="but_multiply">*</string>
+    <string name="but_c">C</string>
+    <string name="but_plus_minus">+/-</string>
+    <string name="but_sqrt">sqrt</string>
+    <string name="but_x2">x^2</string>
+    <string name="but_xy">x^y</string>
+    <string name="but_log">log</string>
+    <string name="but_sin">sin</string>
+    <string name="but_cos">cos</string>
+    <string name="but_tan">tan</string>
+    <string name="but_ln">ln</string>
+    <string name="text_about"> <b> About </b> \n \n Application name: Kalkulator \n Author: Alicja Dewicka \n \n This application can perform simple and advanced calculations. It was created for the purpose of passing the subject. </string>
+    <string name="but_ac">AC</string>
+    <string name="but_percent">%</string>
+</resources>
