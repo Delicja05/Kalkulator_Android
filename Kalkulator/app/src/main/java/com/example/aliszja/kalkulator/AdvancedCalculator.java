@@ -30,6 +30,7 @@ public class AdvancedCalculator extends AppCompatActivity {
         outState.putString("first", first );
         outState.putString("second", second);
         outState.putString("operator", operator);
+        outState.putString("result", String.valueOf(tv_result.getText()));
         super.onSaveInstanceState(outState);
     }
 
@@ -48,9 +49,11 @@ public class AdvancedCalculator extends AppCompatActivity {
 
             if(!first.equals("") && second.equals("")){
                 tv_equation.setText(catValue(first).concat(operator));
+                tv_result.setText(savedInstanceState.getString("result"));
             }else{
                 tv_equation.setText(catValue(first).concat(operator).concat(catValue(second)));
-                calculate();
+                tv_result.setText(savedInstanceState.getString("result"));
+                //calculate();
             }
         }
 
@@ -205,9 +208,19 @@ public class AdvancedCalculator extends AppCompatActivity {
             tv_equation.setText("");
         }
         else{
-            operator = String.valueOf(op);
-            tv_equation.setText(first.concat(operator));
+            if (op.equals("^") && (Character.isLetter(first.charAt(0)) || first.equals(""))) {
+                 Toast.makeText(this, "Najpierw podaj liczbe", Toast.LENGTH_LONG).show();
+                 clearAll();
+            }
+            else{
+                if(first.charAt(first.length()-1) == '.'){
+                    first=first.substring(0,first.length()-1);
+                }
+                operator = String.valueOf(op);
+                tv_equation.setText(first.concat(operator));
+            }
         }
+
     }
 
     public void setAndShow(String string) {
@@ -245,6 +258,9 @@ public class AdvancedCalculator extends AppCompatActivity {
             calculate();
         }
 
+        if(variable.contains(",")){
+            variable = variable.replace(",", ".");
+        }
         tv_equation.setText(variable);
     }
 
@@ -252,14 +268,18 @@ public class AdvancedCalculator extends AppCompatActivity {
         if(value.length() <= 1)
             return value;
 
-        while (value.charAt(value.length()-1) == '0' || value.charAt(value.length()-1) == '.'){
-            if(value.charAt(value.length()-1) == '.'){
+        while (value.charAt(value.length()-1) == '0' || value.charAt(value.length()-1) == '.' || value.charAt(value.length()-1) == ','){
+            if(value.charAt(value.length()-1) == '.' || value.charAt(value.length()-1) == ','){
                 value = value.substring(0, value.length() - 1);
                 break;
             }
             else {
                 value = value.substring(0, value.length() - 1);
             }
+        }
+
+        if(value.contains(",")){
+            value = value.replace(",", ".");
         }
         return value;
     }
@@ -372,6 +392,9 @@ public class AdvancedCalculator extends AppCompatActivity {
         }
 
         if(!calculateResult.equals("")){
+            if(calculateResult.contains(",")){
+                calculateResult = calculateResult.replace(",", ".");
+            }
             tv_result.setText(catValue(calculateResult));
         }
     }
@@ -383,11 +406,22 @@ public class AdvancedCalculator extends AppCompatActivity {
         }
         else if(!tv_result.getText().equals("")){
             String percent = String.format("%.6f", Double.parseDouble((String) tv_result.getText()) / 100);
+            if(percent.contains(",")){
+                percent = percent.replace(",", ".");
+            }
             tv_result.setText(catValue(percent));
+        }
+        else if (Character.isLetter(first.charAt(0)) || first.equals("")){
+            Toast.makeText(this, "Najpierw podaj liczbe", Toast.LENGTH_LONG).show();
+            clearAll();
         }
         else{
             first = String.format("%.6f", Double.parseDouble(first) / 100);
-            String percent = catValue(first)+operator+second;
+            first = catValue(first);
+            String percent = first+operator+second;
+            if(percent.contains(",")){
+                percent = percent.replace(",", ".");
+            }
             tv_equation.setText(percent);
         }
     }

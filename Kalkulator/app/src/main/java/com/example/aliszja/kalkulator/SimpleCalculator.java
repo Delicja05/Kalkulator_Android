@@ -145,6 +145,9 @@ public class SimpleCalculator extends AppCompatActivity {
             tv_equation.setText("");
         }
         else{
+            if(first.charAt(first.length()-1) == '.'){
+                first=first.substring(0,first.length()-1);
+            }
             operator = String.valueOf(op);
             tv_equation.setText(first.concat(operator));
         }
@@ -181,6 +184,9 @@ public class SimpleCalculator extends AppCompatActivity {
             variable = first+operator+second;
         }
 
+        if(variable.contains(",")){
+            variable = variable.replace(",", ".");
+        }
         tv_equation.setText(variable);
     }
 
@@ -188,14 +194,17 @@ public class SimpleCalculator extends AppCompatActivity {
         if(value.length() <= 1)
             return value;
 
-        while (value.charAt(value.length()-1) == '0' || value.charAt(value.length()-1) == '.'){
-            if(value.charAt(value.length()-1) == '.'){
+        while (value.charAt(value.length()-1) == '0' || value.charAt(value.length()-1) == '.' || value.charAt(value.length()-1) == ','){
+            if(value.charAt(value.length()-1) == '.' || value.charAt(value.length()-1) == ','){
                 value = value.substring(0, value.length() - 1);
                 break;
             }
             else {
                 value = value.substring(0, value.length() - 1);
             }
+        }
+        if(value.contains(",")){
+            value = value.replace(",", ".");
         }
         return value;
     }
@@ -226,6 +235,9 @@ public class SimpleCalculator extends AppCompatActivity {
         }
 
         if(!calculateResult.equals("")){
+            if(calculateResult.contains(",")){
+                calculateResult = calculateResult.replace(",", ".");
+            }
             tv_result.setText(catValue(calculateResult));
         }
     }

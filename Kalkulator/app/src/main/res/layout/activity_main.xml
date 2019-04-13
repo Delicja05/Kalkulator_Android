@@ -12,7 +12,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="40dp"
         android:gravity="center"
         android:text="@string/calculator"
         android:textAllCaps="false"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:text="@string/simple"
         android:textAllCaps="false"
-        android:textSize="24sp" />
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/button_advanced"
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:text="@string/advanced"
         android:textAllCaps="false"
-        android:textSize="24sp" />
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/button_about"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:text="@string/about"
         android:textAllCaps="false"
-        android:textSize="24sp" />
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/button_exit"
@@ -49,6 +49,6 @@
         android:layout_height="wrap_content"
         android:text="@string/exit"
         android:textAllCaps="false"
-        android:textSize="24sp" />
+        android:textSize="18sp" />
 </LinearLayout>
 

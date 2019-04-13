@@ -8,20 +8,15 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button but_simple;
-    private Button but_advanced;
-//    private Button but_about;
-    private Button but_exit;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        but_simple = findViewById(R.id.button_simple);
-        but_advanced = findViewById(R.id.button_advanced);
+        Button but_simple = findViewById(R.id.button_simple);
+        Button but_advanced = findViewById(R.id.button_advanced);
         Button but_about = findViewById(R.id.button_about);
-        but_exit = findViewById(R.id.button_exit);
+        Button but_exit = findViewById(R.id.button_exit);
 
         View.OnClickListener handler = new View.OnClickListener(){
             public void onClick(View v) {
