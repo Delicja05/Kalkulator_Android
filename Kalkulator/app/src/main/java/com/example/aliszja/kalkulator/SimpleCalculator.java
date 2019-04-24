@@ -22,6 +22,7 @@ public class SimpleCalculator extends AppCompatActivity {
         outState.putString("first", first );
         outState.putString("second", second);
         outState.putString("operator", operator);
+        outState.putString("result", String.valueOf(tv_result.getText()));
         super.onSaveInstanceState(outState);
     }
 
@@ -42,7 +43,7 @@ public class SimpleCalculator extends AppCompatActivity {
                 tv_equation.setText(catValue(first).concat(operator));
             }else{
                 tv_equation.setText(catValue(first).concat(operator).concat(catValue(second)));
-                calculate();
+                tv_result.setText(savedInstanceState.getString("result"));
             }
         }
 
@@ -154,7 +155,13 @@ public class SimpleCalculator extends AppCompatActivity {
     }
 
     public void setAndShow(String string) {
-        String variable = operator.equals("") ? first : second;
+        String variable;
+        if(operator.equals("")){
+            variable = first;
+        }
+        else{
+            variable = second;
+        }
 
         if(string.equals("+/-")) {
             if (variable.contains("-")) {
@@ -194,17 +201,23 @@ public class SimpleCalculator extends AppCompatActivity {
         if(value.length() <= 1)
             return value;
 
-        while (value.charAt(value.length()-1) == '0' || value.charAt(value.length()-1) == '.' || value.charAt(value.length()-1) == ','){
-            if(value.charAt(value.length()-1) == '.' || value.charAt(value.length()-1) == ','){
+        if(value.contains(",")){
+            value = value.replace(",", ".");
+        }
+
+        while (value.charAt(value.length()-1) == '0' || value.charAt(value.length()-1) == '.'){
+            if(value.charAt(value.length()-1) == '.'){
                 value = value.substring(0, value.length() - 1);
                 break;
             }
             else {
-                value = value.substring(0, value.length() - 1);
+                if(!value.contains(".")){
+                    break;
+                }
+                else {
+                    value = value.substring(0, value.length() - 1);
+                }
             }
-        }
-        if(value.contains(",")){
-            value = value.replace(",", ".");
         }
         return value;
     }

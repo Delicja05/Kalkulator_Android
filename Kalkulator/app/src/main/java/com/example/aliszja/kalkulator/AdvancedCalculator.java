@@ -53,7 +53,6 @@ public class AdvancedCalculator extends AppCompatActivity {
             }else{
                 tv_equation.setText(catValue(first).concat(operator).concat(catValue(second)));
                 tv_result.setText(savedInstanceState.getString("result"));
-                //calculate();
             }
         }
 
@@ -183,10 +182,14 @@ public class AdvancedCalculator extends AppCompatActivity {
     }
 
     public void setOperator(String op){
-        if(tv_result.getText()!="" && !operator.equals("")){
+        if((tv_result.getText()!="" && !operator.equals("") && !second.equals("")) || (tv_result.getText()!="" && !operator.equals("("))){
             first = String.valueOf(tv_result.getText());
             second = "";
         }
+//        if(tv_result.getText()!="" && !operator.equals("") && !operator.equals("(")){
+//            first = String.valueOf(tv_result.getText());
+//            second = "";
+//        }
 
         if(op.equals("^2")){
             if(Character.isLetter(first.charAt(0)) || first.equals("")){
@@ -196,7 +199,7 @@ public class AdvancedCalculator extends AppCompatActivity {
                 operator = "^";
                 second = "2";
                 tv_equation.setText(first.concat(operator).concat(second));
-                calculate();
+//                calculate();
             }
         }
         else if(op.equals("sqrt") || op.equals("sin") || op.equals("cos") || op.equals("tan") || op.equals("log") || op.equals("ln")){
@@ -212,19 +215,35 @@ public class AdvancedCalculator extends AppCompatActivity {
                  Toast.makeText(this, "Najpierw podaj liczbe", Toast.LENGTH_LONG).show();
                  clearAll();
             }
+            if(operator.equals("(") && String.valueOf(op).equals("-") && second.equals("")){
+                second=String.valueOf(op);
+                tv_equation.setText(first.concat(operator).concat(second));
+            }
             else{
                 if(first.charAt(first.length()-1) == '.'){
                     first=first.substring(0,first.length()-1);
                 }
-                operator = String.valueOf(op);
-                tv_equation.setText(first.concat(operator));
+                if(Character.isLetter(first.charAt(0))){
+                    Toast.makeText(this, "Bledne rownanie", Toast.LENGTH_LONG).show();
+                    clearAll();
+                }
+                else {
+                    operator = String.valueOf(op);
+                    tv_equation.setText(first.concat(operator));
+                }
             }
         }
 
     }
 
     public void setAndShow(String string) {
-        String variable = operator.equals("") ? first : second;
+        String variable;
+        if(operator.equals("")){
+            variable = first;
+        }
+        else{
+            variable = second;
+        }
 
         if(string.equals("+/-")) {
             if (variable.contains("-")) {
@@ -254,9 +273,9 @@ public class AdvancedCalculator extends AppCompatActivity {
             variable = first+operator+second;
         }
 
-        if(operator.equals("(") || operator.equals("^")){
-            calculate();
-        }
+//        if(operator.equals("(") || operator.equals("^")){
+//            calculate();
+//        }
 
         if(variable.contains(",")){
             variable = variable.replace(",", ".");
@@ -268,18 +287,23 @@ public class AdvancedCalculator extends AppCompatActivity {
         if(value.length() <= 1)
             return value;
 
-        while (value.charAt(value.length()-1) == '0' || value.charAt(value.length()-1) == '.' || value.charAt(value.length()-1) == ','){
-            if(value.charAt(value.length()-1) == '.' || value.charAt(value.length()-1) == ','){
+        if(value.contains(",")){
+            value = value.replace(",", ".");
+        }
+
+        while (value.charAt(value.length()-1) == '0' || value.charAt(value.length()-1) == '.'){
+            if(value.charAt(value.length()-1) == '.'){
                 value = value.substring(0, value.length() - 1);
                 break;
             }
             else {
-                value = value.substring(0, value.length() - 1);
+                if(!value.contains(".")){
+                    break;
+                }
+                else {
+                    value = value.substring(0, value.length() - 1);
+                }
             }
-        }
-
-        if(value.contains(",")){
-            value = value.replace(",", ".");
         }
         return value;
     }
@@ -287,35 +311,49 @@ public class AdvancedCalculator extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     public void calculate(){
         String calculateResult = "";
-        switch (operator){
-            case "+":
-                calculateResult = String.format("%.6f", ((Double.parseDouble(first)) + Double.parseDouble(second)));
-                break;
-            case "-":
-                calculateResult = String.format("%.6f", ((Double.parseDouble(first)) - Double.parseDouble(second)));
-                break;
-            case "*":
-                calculateResult = String.format("%.6f", ((Double.parseDouble(first)) * Double.parseDouble(second)));
-                break;
-            case "/":
-                if(Double.parseDouble(second) == 0){
-                    Toast.makeText(this, "Nie dziel przez zero!", Toast.LENGTH_LONG).show();
-                    clearAll();
-                }else{
-                    calculateResult = String.format("%.6f", ((Double.parseDouble(first)) / Double.parseDouble(second)));
-                }
-                break;
-            case "^":
-                calculateResult = String.format("%.10f", pow(Double.parseDouble(first), Double.parseDouble(second)));
-                break;
-            case "(":
-                if(first.equals("sqrt") || first.equals("-sqrt")){
-                    if(Double.parseDouble(second) < 0){
-                        Toast.makeText(this, "Nieprawidlowe dane!", Toast.LENGTH_LONG).show();
+        if(!second.equals("") && !second.equals("-")){
+            switch (operator){
+                case "+":
+                    calculateResult = String.format("%.6f", ((Double.parseDouble(first)) + Double.parseDouble(second)));
+                    break;
+                case "-":
+                    calculateResult = String.format("%.6f", ((Double.parseDouble(first)) - Double.parseDouble(second)));
+                    break;
+                case "*":
+                    calculateResult = String.format("%.6f", ((Double.parseDouble(first)) * Double.parseDouble(second)));
+                    break;
+                case "/":
+                    if(Double.parseDouble(second) == 0){
+                        Toast.makeText(this, "Nie dziel przez zero!", Toast.LENGTH_LONG).show();
                         clearAll();
                     }else{
-                        calculateResult = String.format("%.6f", sqrt(Double.parseDouble(second)));
-                        if(first.equals("-sqrt")){
+                        calculateResult = String.format("%.6f", ((Double.parseDouble(first)) / Double.parseDouble(second)));
+                    }
+                    break;
+                case "^":
+                    calculateResult = String.format("%.10f", pow(Double.parseDouble(first), Double.parseDouble(second)));
+                    break;
+                case "(":
+                    if(first.equals("sqrt") || first.equals("-sqrt")){
+                        if(Double.parseDouble(second) < 0){
+                            Toast.makeText(this, "Nieprawidlowe dane!", Toast.LENGTH_LONG).show();
+                            clearAll();
+                        }else{
+                            calculateResult = String.format("%.6f", sqrt(Double.parseDouble(second)));
+                            if(first.equals("-sqrt")){
+                                if(calculateResult.contains("-")){
+                                    calculateResult = calculateResult.substring(1);
+                                }
+                                else{
+                                    calculateResult = "-" + calculateResult;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    if(first.equals("sin") || first.equals("-sin")){
+                        calculateResult = String.format("%.6f", sin(Double.parseDouble(second)));
+                        if(first.equals("-sin")){
                             if(calculateResult.contains("-")){
                                 calculateResult = calculateResult.substring(1);
                             }
@@ -323,72 +361,64 @@ public class AdvancedCalculator extends AppCompatActivity {
                                 calculateResult = "-" + calculateResult;
                             }
                         }
+                        break;
                     }
-                    break;
-                }
-                if(first.equals("sin") || first.equals("-sin")){
-                    calculateResult = String.format("%.6f", sin(Double.parseDouble(second)));
-                    if(first.equals("-sin")){
-                        if(calculateResult.contains("-")){
-                            calculateResult = calculateResult.substring(1);
+                    if(first.equals("cos") || first.equals("-cos")){
+                        calculateResult = String.format("%.6f", cos(Double.parseDouble(second)));
+                        if(first.equals("-cos")){
+                            if(calculateResult.contains("-")){
+                                calculateResult = calculateResult.substring(1);
+                            }
+                            else{
+                                calculateResult = "-" + calculateResult;
+                            }
                         }
-                        else{
-                            calculateResult = "-" + calculateResult;
-                        }
+                        break;
                     }
-                    break;
-                }
-                if(first.equals("cos") || first.equals("-cos")){
-                    calculateResult = String.format("%.6f", cos(Double.parseDouble(second)));
-                    if(first.equals("-cos")){
-                        if(calculateResult.contains("-")){
-                            calculateResult = calculateResult.substring(1);
+                    if(first.equals("tan") || first.equals("-tan")){
+                        calculateResult = String.format("%.6f", tan(Double.parseDouble(second)));
+                        if(first.equals("-tan")){
+                            if(calculateResult.contains("-")){
+                                calculateResult = calculateResult.substring(1);
+                            }
+                            else{
+                                calculateResult = "-" + calculateResult;
+                            }
                         }
-                        else{
-                            calculateResult = "-" + calculateResult;
-                        }
+                        break;
                     }
-                    break;
-                }
-                if(first.equals("tan") || first.equals("-tan")){
-                    calculateResult = String.format("%.6f", tan(Double.parseDouble(second)));
-                    if(first.equals("-tan")){
-                        if(calculateResult.contains("-")){
-                            calculateResult = calculateResult.substring(1);
+                    if(first.equals("ln") || first.equals("-ln")){
+                        calculateResult = String.format("%.6f", log(Double.parseDouble(second)));
+                        if(first.equals("-ln")){
+                            if(calculateResult.contains("-")){
+                                calculateResult = calculateResult.substring(1);
+                            }
+                            else{
+                                calculateResult = "-" + calculateResult;
+                            }
                         }
-                        else{
-                            calculateResult = "-" + calculateResult;
-                        }
+                        break;
                     }
-                    break;
-                }
-                if(first.equals("ln") || first.equals("-ln")){
-                    calculateResult = String.format("%.6f", log(Double.parseDouble(second)));
-                    if(first.equals("-ln")){
-                        if(calculateResult.contains("-")){
-                            calculateResult = calculateResult.substring(1);
+                    if(first.equals("log") || first.equals("-log")){
+                        calculateResult = String.format("%.6f", log10(Double.parseDouble(second)));
+                        if(first.equals("-log")){
+                            if(calculateResult.contains("-")){
+                                calculateResult = calculateResult.substring(1);
+                            }
+                            else{
+                                calculateResult = "-" + calculateResult;
+                            }
                         }
-                        else{
-                            calculateResult = "-" + calculateResult;
-                        }
+                        break;
                     }
-                    break;
-                }
-                if(first.equals("log") || first.equals("-log")){
-                    calculateResult = String.format("%.6f", log10(Double.parseDouble(second)));
-                    if(first.equals("-log")){
-                        if(calculateResult.contains("-")){
-                            calculateResult = calculateResult.substring(1);
-                        }
-                        else{
-                            calculateResult = "-" + calculateResult;
-                        }
-                    }
-                    break;
-                }
 
-            default:
-                break;
+                default:
+                    break;
+            }
+        }
+        else {
+            Toast.makeText(this, "Nieprawidlowe dane!", Toast.LENGTH_LONG).show();
+            clearAll();
         }
 
         if(!calculateResult.equals("")){
@@ -416,8 +446,14 @@ public class AdvancedCalculator extends AppCompatActivity {
             clearAll();
         }
         else{
-            first = String.format("%.6f", Double.parseDouble(first) / 100);
-            first = catValue(first);
+            if(second.equals("")) {
+                first = String.format("%.6f", Double.parseDouble(first) / 100);
+                first = catValue(first);
+            }
+            else{
+                second = String.format("%.6f", Double.parseDouble(second) / 100);
+                second = catValue(second);
+            }
             String percent = first+operator+second;
             if(percent.contains(",")){
                 percent = percent.replace(",", ".");
