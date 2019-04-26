@@ -182,24 +182,36 @@ public class AdvancedCalculator extends AppCompatActivity {
     }
 
     public void setOperator(String op){
-        if((tv_result.getText()!="" && !operator.equals("") && !second.equals("")) || (tv_result.getText()!="" && !operator.equals("("))){
+        if((tv_result.getText()!="" && !operator.equals("") && !second.equals("")) || (tv_result.getText()!="" && !operator.equals("("))) {
             first = String.valueOf(tv_result.getText());
             second = "";
         }
-//        if(tv_result.getText()!="" && !operator.equals("") && !operator.equals("(")){
-//            first = String.valueOf(tv_result.getText());
-//            second = "";
-//        }
-
-        if(op.equals("^2")){
-            if(Character.isLetter(first.charAt(0)) || first.equals("")){
+        if(op.equals("^2")) {
+            if (first.equals("")) {
                 Toast.makeText(this, "Najpierw podaj liczbe", Toast.LENGTH_LONG).show();
                 clearAll();
-            }else{
+            } else if (!first.equals("")) {
+                if (Character.isLetter(first.charAt(0))) {
+                    Toast.makeText(this, "Najpierw podaj liczbe", Toast.LENGTH_LONG).show();
+                    clearAll();
+                }
+                else {
                 operator = "^";
                 second = "2";
                 tv_equation.setText(first.concat(operator).concat(second));
-//                calculate();
+                }
+            }
+        }
+        else if (op.equals("^")) {
+            if(first.equals("")) {
+                Toast.makeText(this, "Najpierw podaj liczbe", Toast.LENGTH_LONG).show();
+                clearAll();
+            }
+            else if(!first.equals("")){
+                if (Character.isLetter(first.charAt(0))) {
+                    Toast.makeText(this, "Najpierw podaj liczbe", Toast.LENGTH_LONG).show();
+                    clearAll();
+                }
             }
         }
         else if(op.equals("sqrt") || op.equals("sin") || op.equals("cos") || op.equals("tan") || op.equals("log") || op.equals("ln")){
@@ -211,10 +223,6 @@ public class AdvancedCalculator extends AppCompatActivity {
             tv_equation.setText("");
         }
         else{
-            if (op.equals("^") && (Character.isLetter(first.charAt(0)) || first.equals(""))) {
-                 Toast.makeText(this, "Najpierw podaj liczbe", Toast.LENGTH_LONG).show();
-                 clearAll();
-            }
             if(operator.equals("(") && String.valueOf(op).equals("-") && second.equals("")){
                 second=String.valueOf(op);
                 tv_equation.setText(first.concat(operator).concat(second));
@@ -233,7 +241,6 @@ public class AdvancedCalculator extends AppCompatActivity {
                 }
             }
         }
-
     }
 
     public void setAndShow(String string) {
@@ -272,10 +279,6 @@ public class AdvancedCalculator extends AppCompatActivity {
             second = variable;
             variable = first+operator+second;
         }
-
-//        if(operator.equals("(") || operator.equals("^")){
-//            calculate();
-//        }
 
         if(variable.contains(",")){
             variable = variable.replace(",", ".");
@@ -388,13 +391,17 @@ public class AdvancedCalculator extends AppCompatActivity {
                         break;
                     }
                     if(first.equals("ln") || first.equals("-ln")){
-                        calculateResult = String.format("%.6f", log(Double.parseDouble(second)));
-                        if(first.equals("-ln")){
-                            if(calculateResult.contains("-")){
-                                calculateResult = calculateResult.substring(1);
-                            }
-                            else{
-                                calculateResult = "-" + calculateResult;
+                        if(Double.parseDouble(second) < 0){
+                            Toast.makeText(this, "Nieprawidlowe dane!", Toast.LENGTH_LONG).show();
+                            clearAll();
+                        }else {
+                            calculateResult = String.format("%.6f", log(Double.parseDouble(second)));
+                            if (first.equals("-ln")) {
+                                if (calculateResult.contains("-")) {
+                                    calculateResult = calculateResult.substring(1);
+                                } else {
+                                    calculateResult = "-" + calculateResult;
+                                }
                             }
                         }
                         break;
@@ -432,7 +439,9 @@ public class AdvancedCalculator extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     public void changeToPercent(){
         if(tv_equation.getText().equals("")){
-            tv_equation.setText("");
+            Toast.makeText(this, "Najpierw podaj liczbe", Toast.LENGTH_LONG).show();
+            clearAll();
+
         }
         else if(!tv_result.getText().equals("")){
             String percent = String.format("%.6f", Double.parseDouble((String) tv_result.getText()) / 100);
